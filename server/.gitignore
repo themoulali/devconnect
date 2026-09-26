@@ -1,0 +1,7 @@
+.neon
+node_modules/
+
+.agents/
+.claude/
+.cursor/
+.devin/

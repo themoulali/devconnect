@@ -4,16 +4,21 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-  "dev": "tsx watch src/server.ts",
-  "build": "tsc",
-  "start": "node dist/server.js"
-},
+    "dev": "tsx watch src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "postinstall": "prisma skills sync || exit 0"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
-    "express": "^5.2.1"
+    "@neon/config": "^1.8.2",
+    "@neon/env": "^1.4.7",
+    "@prisma/orm-postgres": "^8.0.0-rc.12",
+    "express": "^5.2.1",
+    "prisma": "^8.0.0-rc.17"
   },
   "devDependencies": {
     "@types/express": "^5.0.6",
