@@ -97,13 +97,6 @@
                   "kind": "scalar"
                 }
               },
-              "updatedAt": {
-                "nullable": false,
-                "type": {
-                  "codecId": "pg/timestamptz-temporal@1",
-                  "kind": "scalar"
-                }
-              },
               "userId": {
                 "nullable": false,
                 "type": {
@@ -146,9 +139,6 @@
                 },
                 "title": {
                   "column": "title"
-                },
-                "updatedAt": {
-                  "column": "updatedAt"
                 },
                 "userId": {
                   "column": "userId"
@@ -199,13 +189,6 @@
                   "entityName": "ConnectionStatus",
                   "namespaceId": "public",
                   "plane": "domain"
-                }
-              },
-              "updatedAt": {
-                "nullable": false,
-                "type": {
-                  "codecId": "pg/timestamptz-temporal@1",
-                  "kind": "scalar"
                 }
               }
             },
@@ -259,9 +242,6 @@
                 },
                 "status": {
                   "column": "status"
-                },
-                "updatedAt": {
-                  "column": "updatedAt"
                 }
               },
               "namespaceId": "public",
@@ -430,13 +410,6 @@
                   "kind": "scalar"
                 }
               },
-              "updatedAt": {
-                "nullable": false,
-                "type": {
-                  "codecId": "pg/timestamptz-temporal@1",
-                  "kind": "scalar"
-                }
-              },
               "userId": {
                 "nullable": false,
                 "type": {
@@ -485,9 +458,6 @@
                 },
                 "title": {
                   "column": "title"
-                },
-                "updatedAt": {
-                  "column": "updatedAt"
                 },
                 "userId": {
                   "column": "userId"
@@ -564,7 +534,7 @@
               "createdAt": {
                 "nullable": false,
                 "type": {
-                  "codecId": "pg/timestamptz-temporal@1",
+                  "codecId": "pg/timestamptz-string@1",
                   "kind": "scalar"
                 }
               },
@@ -599,7 +569,7 @@
               "updatedAt": {
                 "nullable": false,
                 "type": {
-                  "codecId": "pg/timestamptz-temporal@1",
+                  "codecId": "pg/timestamptz-string@1",
                   "kind": "scalar"
                 }
               }
@@ -844,11 +814,6 @@
                   "nativeType": "text",
                   "nullable": false
                 },
-                "updatedAt": {
-                  "codecId": "pg/timestamptz-temporal@1",
-                  "nativeType": "timestamptz",
-                  "nullable": false
-                },
                 "userId": {
                   "codecId": "pg/text@1",
                   "nativeType": "text",
@@ -933,11 +898,6 @@
                     "namespaceId": "public",
                     "plane": "storage"
                   }
-                },
-                "updatedAt": {
-                  "codecId": "pg/timestamptz-temporal@1",
-                  "nativeType": "timestamptz",
-                  "nullable": false
                 }
               },
               "foreignKeys": [
@@ -1170,11 +1130,6 @@
                   "nativeType": "text",
                   "nullable": false
                 },
-                "updatedAt": {
-                  "codecId": "pg/timestamptz-temporal@1",
-                  "nativeType": "timestamptz",
-                  "nullable": false
-                },
                 "userId": {
                   "codecId": "pg/text@1",
                   "nativeType": "text",
@@ -1247,11 +1202,7 @@
             "User": {
               "columns": {
                 "createdAt": {
-                  "codecId": "pg/timestamptz-temporal@1",
-                  "default": {
-                    "expression": "now()",
-                    "kind": "function"
-                  },
+                  "codecId": "pg/timestamptz-string@1",
                   "nativeType": "timestamptz",
                   "nullable": false
                 },
@@ -1276,7 +1227,7 @@
                   "nullable": true
                 },
                 "updatedAt": {
-                  "codecId": "pg/timestamptz-temporal@1",
+                  "codecId": "pg/timestamptz-string@1",
                   "nativeType": "timestamptz",
                   "nullable": false
                 }
@@ -1386,10 +1337,10 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "e9d1cc19108646d99872693787f23162eb9fe6aa261af818a6029ebc3df0d3d3"
+    "storageHash": "b4833e79db3e5f4d0d29fd1e75b7b2769ccdc0062bbf25efb216dc6ea4a1ad79"
   },
   "execution": {
-    "executionHash": "b8df70eab403137ae94cbc3f35d660d69ef4f5d986bd7697a54411469d82828b",
+    "executionHash": "af67c825e6c43be357b80ee21a72b470e7d41979e606c1d028e1edb5dfcf1c5b",
     "mutations": {
       "defaults": [
         {
@@ -1405,41 +1356,11 @@
         },
         {
           "onCreate": {
-            "id": "instantNow",
-            "kind": "generator"
-          },
-          "onUpdate": {
-            "id": "instantNow",
-            "kind": "generator"
-          },
-          "ref": {
-            "column": "updatedAt",
-            "namespace": "public",
-            "table": "BlogPost"
-          }
-        },
-        {
-          "onCreate": {
             "id": "uuidv4",
             "kind": "generator"
           },
           "ref": {
             "column": "id",
-            "namespace": "public",
-            "table": "Connection"
-          }
-        },
-        {
-          "onCreate": {
-            "id": "instantNow",
-            "kind": "generator"
-          },
-          "onUpdate": {
-            "id": "instantNow",
-            "kind": "generator"
-          },
-          "ref": {
-            "column": "updatedAt",
             "namespace": "public",
             "table": "Connection"
           }
@@ -1468,21 +1389,6 @@
         },
         {
           "onCreate": {
-            "id": "instantNow",
-            "kind": "generator"
-          },
-          "onUpdate": {
-            "id": "instantNow",
-            "kind": "generator"
-          },
-          "ref": {
-            "column": "updatedAt",
-            "namespace": "public",
-            "table": "Project"
-          }
-        },
-        {
-          "onCreate": {
             "id": "uuidv4",
             "kind": "generator"
           },
@@ -1490,6 +1396,17 @@
             "column": "id",
             "namespace": "public",
             "table": "Skill"
+          }
+        },
+        {
+          "onCreate": {
+            "id": "timestampNow",
+            "kind": "generator"
+          },
+          "ref": {
+            "column": "createdAt",
+            "namespace": "public",
+            "table": "User"
           }
         },
         {
@@ -1505,11 +1422,11 @@
         },
         {
           "onCreate": {
-            "id": "instantNow",
+            "id": "timestampNow",
             "kind": "generator"
           },
           "onUpdate": {
-            "id": "instantNow",
+            "id": "timestampNow",
             "kind": "generator"
           },
           "ref": {
