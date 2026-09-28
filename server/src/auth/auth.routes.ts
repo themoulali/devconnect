@@ -10,8 +10,13 @@ import {
   registerUser,
   loginUser,
 } from "./auth.service.js"
+import {
+  getProfile,
+  updateProfile,
+} from "../services/profile.service.js"
 
 const router = Router()
+
 router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body
@@ -27,23 +32,10 @@ router.post("/login", async (req, res) => {
     console.error("❌ Login failed")
     console.error(error)
 
-    if (
-      error instanceof Error &&
-      error.message === "Invalid email or password"
-    ) {
-      res.status(401).json({
-        success: false,
-        data: null,
-        message: error.message,
-      })
-
-      return
-    }
-
-    res.status(500).json({
+    res.status(401).json({
       success: false,
       data: null,
-      message: "Login failed",
+      message: "Invalid email or password",
     })
   }
 })
@@ -52,7 +44,7 @@ router.post("/register", async (req, res) => {
   try {
     const { name, email, password } = req.body
 
-    const user = await registerUser({
+    const result = await registerUser({
       name,
       email,
       password,
@@ -60,14 +52,17 @@ router.post("/register", async (req, res) => {
 
     res.status(201).json({
       success: true,
-      data: user,
-      message: "User registered successfully",
+      data: result,
+      message: "Registration successful",
     })
   } catch (error) {
     console.error("❌ Registration failed")
     console.error(error)
 
-    if (error instanceof Error && error.message === "Email already registered") {
+    if (
+      error instanceof Error &&
+      error.message === "Email already registered"
+    ) {
       res.status(409).json({
         success: false,
         data: null,
@@ -84,43 +79,76 @@ router.post("/register", async (req, res) => {
     })
   }
 })
+
 router.get(
   "/me",
   authenticateToken,
   async (req: AuthenticatedRequest, res) => {
     try {
-      const user = await db.orm.public.User
-        .where({ id: req.userId })
-        .first()
+      const user = await getProfile(req.userId as string)
 
-      if (!user) {
+      res.status(200).json({
+        success: true,
+        data: user,
+        message: "Profile retrieved successfully",
+      })
+    } catch (error) {
+      console.error("❌ Failed to get profile")
+      console.error(error)
+
+      if (error instanceof Error && error.message === "User not found") {
         res.status(404).json({
           success: false,
           data: null,
-          message: "User not found",
+          message: error.message,
         })
 
         return
       }
 
+      res.status(500).json({
+        success: false,
+        data: null,
+        message: "Failed to get profile",
+      })
+    }
+  }
+)
+
+router.put(
+  "/me",
+  authenticateToken,
+  async (req: AuthenticatedRequest, res) => {
+    try {
+      const { name } = req.body
+
+      const user = await updateProfile(req.userId as string, {
+        name,
+      })
+
       res.status(200).json({
         success: true,
-        data: {
-          id: user.id,
-          name: user.name,
-          email: user.email,
-          createdAt: user.createdAt,
-        },
-        message: "Authenticated user retrieved successfully",
+        data: user,
+        message: "Profile updated successfully",
       })
     } catch (error) {
-      console.error("❌ Failed to get authenticated user")
+      console.error("❌ Failed to update profile")
       console.error(error)
+
+      if (error instanceof Error && error.message === "User not found") {
+        res.status(404).json({
+          success: false,
+          data: null,
+          message: error.message,
+        })
+
+        return
+      }
 
       res.status(500).json({
         success: false,
         data: null,
-        message: "Failed to get user",
+        message: "Failed to update profile",
       })
     }
   }
