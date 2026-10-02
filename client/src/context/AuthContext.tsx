@@ -18,6 +18,7 @@ interface AuthContextType {
   isAuthenticated: boolean
   isLoading: boolean
   login: (user: User, token: string) => void
+  updateUser: (userData: User) => void
   logout: () => void
 }
 
@@ -52,6 +53,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
     localStorage.setItem("devconnect_token", authToken)
   }
 
+  const updateUser = (userData: User) => {
+  setUser(userData)
+  localStorage.setItem("devconnect_user", JSON.stringify(userData))
+}
+
   const logout = () => {
     setUser(null)
     setToken(null)
@@ -68,6 +74,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   isAuthenticated: Boolean(user && token),
   isLoading,
   login,
+  updateUser,
   logout,
 }}
     >
