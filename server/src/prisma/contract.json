@@ -153,7 +153,7 @@
               "createdAt": {
                 "nullable": false,
                 "type": {
-                  "codecId": "pg/timestamptz-temporal@1",
+                  "codecId": "pg/timestamptz-string@1",
                   "kind": "scalar"
                 }
               },
@@ -189,6 +189,13 @@
                   "entityName": "ConnectionStatus",
                   "namespaceId": "public",
                   "plane": "domain"
+                }
+              },
+              "updatedAt": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "kind": "scalar"
                 }
               }
             },
@@ -242,6 +249,9 @@
                 },
                 "status": {
                   "column": "status"
+                },
+                "updatedAt": {
+                  "column": "updatedAt"
                 }
               },
               "namespaceId": "public",
@@ -865,11 +875,7 @@
               ],
               "columns": {
                 "createdAt": {
-                  "codecId": "pg/timestamptz-temporal@1",
-                  "default": {
-                    "expression": "now()",
-                    "kind": "function"
-                  },
+                  "codecId": "pg/timestamptz-string@1",
                   "nativeType": "timestamptz",
                   "nullable": false
                 },
@@ -898,6 +904,11 @@
                     "namespaceId": "public",
                     "plane": "storage"
                   }
+                },
+                "updatedAt": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "nativeType": "timestamptz",
+                  "nullable": false
                 }
               },
               "foreignKeys": [
@@ -1337,10 +1348,10 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "b4833e79db3e5f4d0d29fd1e75b7b2769ccdc0062bbf25efb216dc6ea4a1ad79"
+    "storageHash": "a5e065936bc4bebfd9c51393b4fe2a28ea90057bc18d6f2119c956e557991b2f"
   },
   "execution": {
-    "executionHash": "af67c825e6c43be357b80ee21a72b470e7d41979e606c1d028e1edb5dfcf1c5b",
+    "executionHash": "bc4c1fa4add653bb2d7c6636e3cb2910cd79d171d9ea196c687e534cd4acd8b1",
     "mutations": {
       "defaults": [
         {
@@ -1356,11 +1367,37 @@
         },
         {
           "onCreate": {
+            "id": "timestampNow",
+            "kind": "generator"
+          },
+          "ref": {
+            "column": "createdAt",
+            "namespace": "public",
+            "table": "Connection"
+          }
+        },
+        {
+          "onCreate": {
             "id": "uuidv4",
             "kind": "generator"
           },
           "ref": {
             "column": "id",
+            "namespace": "public",
+            "table": "Connection"
+          }
+        },
+        {
+          "onCreate": {
+            "id": "timestampNow",
+            "kind": "generator"
+          },
+          "onUpdate": {
+            "id": "timestampNow",
+            "kind": "generator"
+          },
+          "ref": {
+            "column": "updatedAt",
             "namespace": "public",
             "table": "Connection"
           }

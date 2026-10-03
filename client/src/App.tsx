@@ -2,6 +2,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom"
 import Login from "./pages/Login.tsx"
 import Register from "./pages/Register.tsx"
 import Profile from "./pages/Profile.tsx"
+import Developers from "./pages/Developers.tsx"
+import DeveloperProfile from "./pages/DeveloperProfile.tsx"
 import ProtectedRoute from "./routes/ProtectedRoute.tsx"
 
 function Home() {
@@ -30,6 +32,11 @@ function App() {
         <Route element={<ProtectedRoute />}>
           <Route path="/" element={<Home />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/developers" element={<Developers />} />
+          <Route
+            path="/developers/alex-johnson"
+            element={<DeveloperProfile />}
+          />
         </Route>
       </Routes>
     </BrowserRouter>

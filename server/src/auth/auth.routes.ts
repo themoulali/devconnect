@@ -14,6 +14,10 @@ import {
   getProfile,
   updateProfile,
 } from "../services/profile.service.js"
+import {
+  sendConnectionRequest,
+  getConnection,
+} from "../services/connection.service.js"
 
 const router = Router()
 
@@ -154,4 +158,88 @@ router.put(
   }
 )
 
+router.post(
+  "/connections",
+  authenticateToken,
+  async (req: AuthenticatedRequest, res) => {
+    try {
+      const { receiverId } = req.body
+
+      const connection = await sendConnectionRequest(
+        req.userId as string,
+        receiverId
+      )
+
+      res.status(201).json({
+        success: true,
+        data: connection,
+        message: "Connection request sent",
+      })
+    } catch (error) {
+      console.error("❌ Failed to send connection request")
+      console.error(error)
+
+      if (
+        error instanceof Error &&
+        error.message === "Cannot connect with yourself"
+      ) {
+        res.status(400).json({
+          success: false,
+          data: null,
+          message: error.message,
+        })
+
+        return
+      }
+
+      if (
+        error instanceof Error &&
+        error.message === "Connection already exists"
+      ) {
+        res.status(409).json({
+          success: false,
+          data: null,
+          message: error.message,
+        })
+
+        return
+      }
+
+      res.status(500).json({
+        success: false,
+        data: null,
+        message: "Failed to send connection request",
+      })
+    }
+  }
+)
+
 export default router
+
+router.get(
+  "/connections/:receiverId",
+  authenticateToken,
+  async (req: AuthenticatedRequest, res) => {
+    try {
+      const connection = await getConnection(
+        req.userId as string,
+        req.params.receiverId as string
+      )
+
+      res.status(200).json({
+        success: true,
+        data: connection,
+        message: "Connection retrieved successfully",
+      })
+    } catch (error) {
+      console.error("❌ Failed to get connection")
+      console.error(error)
+
+      res.status(500).json({
+        success: false,
+        data: null,
+        message: "Failed to get connection",
+      })
+    }
+  }
+)
