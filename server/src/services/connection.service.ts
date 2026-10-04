@@ -8,12 +8,19 @@ export async function sendConnectionRequest(
     throw new Error("Cannot connect with yourself")
   }
 
-  const existingConnection = await db.orm.public.Connection
+  const existingConnection =
+  (await db.orm.public.Connection
     .where({
       requesterId,
       receiverId,
     })
-    .first()
+    .first()) ??
+  (await db.orm.public.Connection
+    .where({
+      requesterId: receiverId,
+      receiverId: requesterId,
+    })
+    .first())
 
   if (existingConnection) {
     throw new Error("Connection already exists")
