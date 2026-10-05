@@ -1,6 +1,7 @@
 import express from "express"
 import cors from "cors"
 import authRoutes from "./auth/auth.routes.js"
+import notificationRoutes from "./notifications.routes.js"
 
 const app = express()
 
@@ -23,5 +24,6 @@ app.get("/api/health", (_req, res) => {
 })
 
 app.use("/auth", authRoutes)
+app.use("/notifications", notificationRoutes)
 
 export default app

@@ -14,6 +14,8 @@ model User {
   endorsementsReceived Endorsement[]        @relation("EndorsementsReceived")
   connectionsSent      Connection[]         @relation("ConnectionRequester")
   connectionsReceived  Connection[]         @relation("ConnectionReceiver")
+  notificationsReceived Notification[] @relation("NotificationReceiver")
+  notificationsSent     Notification[] @relation("NotificationSender")
 }
 
 model Project {
@@ -85,4 +87,17 @@ model Connection {
   receiver    User                 @relation("ConnectionReceiver", fields: [receiverId], references: [id])
 
   @@unique([requesterId, receiverId])
+}
+
+model Notification {
+  id         String   @id @default(uuid())
+  message    String
+  read       Boolean  @default(false)
+  createdAt  temporal.createdAtString()
+
+  receiverId String
+  receiver   User     @relation("NotificationReceiver", fields: [receiverId], references: [id])
+
+  senderId   String?
+  sender     User?    @relation("NotificationSender", fields: [senderId], references: [id])
 }
