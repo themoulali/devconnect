@@ -18,6 +18,7 @@ import {
   sendConnectionRequest,
   getConnection,
   acceptConnectionRequest,
+  getPendingConnectionRequests,
 } from "../services/connection.service.js"
 
 const router = Router()
@@ -218,6 +219,33 @@ router.post(
 export default router
 
 router.get(
+  "/connections/pending",
+  authenticateToken,
+  async (req: AuthenticatedRequest, res) => {
+    try {
+      const connections = await getPendingConnectionRequests(
+        req.userId as string
+      )
+
+      res.status(200).json({
+        success: true,
+        data: connections,
+        message: "Pending connection requests retrieved successfully",
+      })
+    } catch (error) {
+      console.error("❌ Failed to get pending connection requests")
+      console.error(error)
+
+      res.status(500).json({
+        success: false,
+        data: null,
+        message: "Failed to get pending connection requests",
+      })
+    }
+  }
+)
+
+router.get(
   "/connections/:receiverId",
   authenticateToken,
   async (req: AuthenticatedRequest, res) => {
@@ -285,3 +313,4 @@ router.put(
     }
   }
 )
+

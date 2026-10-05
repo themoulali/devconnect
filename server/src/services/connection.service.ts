@@ -73,3 +73,14 @@ export async function acceptConnectionRequest(
  return updatedConnection
 }
 
+export async function getPendingConnectionRequests(
+  receiverId: string
+) {
+  const connections = await db.orm.public.Connection
+    .where({
+      receiverId,
+      status: "PENDING",
+    })
+
+  return connections
+}
