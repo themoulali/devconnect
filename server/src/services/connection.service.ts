@@ -48,3 +48,28 @@ export async function getConnection(
 
   return connection
 }
+
+export async function acceptConnectionRequest(
+  connectionId: string,
+  receiverId: string
+) {
+  const connection = await db.orm.public.Connection
+    .where({
+      id: connectionId,
+      receiverId,
+      status: "PENDING",
+    })
+    .first()
+
+  if (!connection) {
+    throw new Error("Pending connection request not found")
+  }
+
+  const updatedConnection = await db.orm.public.Connection
+  .where({ id: connectionId })
+  .update({
+    status: "ACCEPTED",
+  })
+ return updatedConnection
+}
+

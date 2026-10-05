@@ -17,6 +17,7 @@ import {
 import {
   sendConnectionRequest,
   getConnection,
+  acceptConnectionRequest,
 } from "../services/connection.service.js"
 
 const router = Router()
@@ -239,6 +240,47 @@ router.get(
         success: false,
         data: null,
         message: "Failed to get connection",
+      })
+    }
+  }
+)
+
+router.put(
+  "/connections/:connectionId/accept",
+  authenticateToken,
+  async (req: AuthenticatedRequest, res) => {
+    try {
+      const connection = await acceptConnectionRequest(
+        req.params.connectionId as string,
+        req.userId as string
+      )
+
+      res.status(200).json({
+        success: true,
+        data: connection,
+        message: "Connection request accepted",
+      })
+    } catch (error) {
+      console.error("❌ Failed to accept connection request")
+      console.error(error)
+
+      if (
+        error instanceof Error &&
+        error.message === "Pending connection request not found"
+      ) {
+        res.status(404).json({
+          success: false,
+          data: null,
+          message: error.message,
+        })
+
+        return
+      }
+
+      res.status(500).json({
+        success: false,
+        data: null,
+        message: "Failed to accept connection request",
       })
     }
   }
