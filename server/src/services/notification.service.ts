@@ -19,6 +19,7 @@ export async function getNotifications(receiverId: string) {
     .where({
       receiverId,
     })
+    .all()
 
   return notifications
 }
@@ -29,6 +30,7 @@ export async function getUnreadNotifications(receiverId: string) {
       receiverId,
       read: false,
     })
+    .all()
 
   return notifications
 }

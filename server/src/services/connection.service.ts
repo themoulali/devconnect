@@ -1,4 +1,5 @@
 import db from "../db.js"
+import { createNotification } from "./notification.service.js"
 
 export async function sendConnectionRequest(
   requesterId: string,
@@ -27,12 +28,18 @@ export async function sendConnectionRequest(
   }
 
   const connection = await db.orm.public.Connection.create({
-    requesterId,
-    receiverId,
-    status: "PENDING",
-  })
+  requesterId,
+  receiverId,
+  status: "PENDING",
+})
 
-  return connection
+await createNotification(
+  receiverId,
+  "You received a new connection request.",
+  requesterId
+)
+
+return connection
 }
 
 export async function getConnection(
