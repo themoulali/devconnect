@@ -15,6 +15,12 @@ const developers: Developer[] = [
     location: "Hyderabad, India",
     bio: "Building web applications with Python, Django, React, and REST APIs.",
   },
+  {
+    name: "Sarah Williams",
+    role: "Django Backend Developer",
+    location: "Bengaluru, India",
+    bio: "Building backend services with Django, REST APIs, PostgreSQL, and Python.",
+  },
 ]
 
 function Developers() {
