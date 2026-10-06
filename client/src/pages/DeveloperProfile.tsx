@@ -1,8 +1,55 @@
 import { useEffect, useState } from "react"
-import { Link } from "react-router-dom"
+import { Link, useParams } from "react-router-dom"
 import { useAuth } from "../context/AuthContext"
 
+type Developer = {
+  id: string
+  name: string
+  role: string
+  location: string
+  bio: string
+}
+
+const developers: Developer[] = [
+  {
+    id: "alex-johnson",
+    name: "Alex Johnson",
+    role: "Python Full Stack Developer",
+    location: "Hyderabad, India",
+    bio: "Building web applications with Python, Django, React, and REST APIs.",
+  },
+  {
+    id: "sarah-williams",
+    name: "Sarah Williams",
+    role: "Django Backend Developer",
+    location: "Bengaluru, India",
+    bio: "Building backend services with Django, REST APIs, PostgreSQL, and Python.",
+  },
+]
+
 function DeveloperProfile() {
+    const { id } = useParams()
+
+    const developer = developers.find((item) => item.id === id)
+    if (!developer) {
+  return (
+    <div className="min-h-screen p-8">
+      <div className="mx-auto max-w-4xl">
+        <h1 className="text-3xl font-bold">
+          Developer Not Found
+        </h1>
+
+        <Link
+          to="/developers"
+          className="mt-4 inline-block text-sm underline"
+        >
+          ← Back to Developers
+        </Link>
+      </div>
+    </div>
+  )
+}
+
     const [connected, setConnected] = useState(false)
     const { token } = useAuth()
 
@@ -72,16 +119,19 @@ function DeveloperProfile() {
 
         <div className="mt-8 rounded-lg border p-6 shadow-sm">
           <h2 className="text-2xl font-semibold">
-            Alex Johnson
+            {developer?.name}
           </h2>
 
           <p className="mt-2 text-gray-600">
-            Python Full Stack Developer
+            {developer?.role}
+          </p>
+
+          <p className="mt-1 text-sm text-gray-500">
+            📍 {developer?.location}
           </p>
 
           <p className="mt-6">
-            Building web applications with Python, Django,
-            React, and REST APIs.
+            {developer?.bio}
           </p>
 
         <div className="mt-8">

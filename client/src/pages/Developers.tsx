@@ -2,6 +2,7 @@ import { Link } from "react-router-dom"
 import { useState } from "react"
 
 type Developer = {
+  id: string
   name: string
   role: string
   location: string
@@ -10,12 +11,14 @@ type Developer = {
 
 const developers: Developer[] = [
   {
+    id: "alex-johnson",
     name: "Alex Johnson",
     role: "Python Full Stack Developer",
     location: "Hyderabad, India",
     bio: "Building web applications with Python, Django, React, and REST APIs.",
   },
   {
+    id: "sarah-williams",
     name: "Sarah Williams",
     role: "Django Backend Developer",
     location: "Bengaluru, India",
@@ -120,7 +123,7 @@ const filteredDevelopers = developers.filter((developer) =>
                     </p>
 
                     <Link
-                      to="/developers/alex-johnson"
+                      to={`/developers/${developer.id}`}
                       className="mt-6 inline-block rounded-md bg-black px-4 py-2 text-white"
                     >
                       View Profile

@@ -174,7 +174,7 @@ function App() {
           />
 
           <Route
-            path="/developers/alex-johnson"
+            path="/developers/:id"
             element={
               <>
                 <Navigation />
