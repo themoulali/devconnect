@@ -4,6 +4,7 @@ import { useState } from "react"
 type Developer = {
   name: string
   role: string
+  location: string
   bio: string
 }
 
@@ -11,6 +12,7 @@ const developers: Developer[] = [
   {
     name: "Alex Johnson",
     role: "Python Full Stack Developer",
+    location: "Hyderabad, India",
     bio: "Building web applications with Python, Django, React, and REST APIs.",
   },
 ]
@@ -23,6 +25,7 @@ function Developers() {
 const filteredDevelopers = developers.filter((developer) =>
   developer.name.toLowerCase().includes(normalizedSearch) ||
   developer.role.toLowerCase().includes(normalizedSearch) ||
+  developer.location.toLowerCase().includes(normalizedSearch) ||
   developer.bio.toLowerCase().includes(normalizedSearch)
 )
 
@@ -53,7 +56,7 @@ const filteredDevelopers = developers.filter((developer) =>
             <input
               id="developer-search"
               type="text"
-              placeholder="Search by name, role, or skill..."
+              placeholder="Search by name, role, skill, or location..."
               value={search}
               onChange={(event) => setSearch(event.target.value)}
               className="w-full rounded-md border bg-gray-50 px-4 py-2 pl-10 outline-none focus:ring-2 focus:ring-black"
@@ -85,7 +88,7 @@ const filteredDevelopers = developers.filter((developer) =>
                 </p>
 
                 <p className="mt-2 text-sm text-gray-600">
-                  Try a different name, role, or skill.
+                  Try a different name, role, skill, or location.
                 </p>
               </div>
             ) : (
@@ -100,6 +103,10 @@ const filteredDevelopers = developers.filter((developer) =>
 
                     <p className="mt-1 text-gray-600">
                       {developer.role}
+                    </p>
+
+                    <p className="mt-1 text-sm text-gray-500">
+                      📍 {developer.location}
                     </p>
 
                     <p className="mt-4">
