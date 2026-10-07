@@ -89,16 +89,30 @@ function Notifications() {
     }
   }
 
+  const unreadCount = notifications.filter(
+    (notification) => !notification.read
+  ).length
+
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="mx-auto max-w-3xl">
-        <h1 className="text-3xl font-bold text-gray-900">
-          Notifications
-        </h1>
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900">
+              Notifications
+            </h1>
 
-        <p className="mt-2 text-gray-600">
-          Stay updated with your DevConnect activity.
-        </p>
+            <p className="mt-2 text-gray-600">
+              Stay updated with your DevConnect activity.
+            </p>
+          </div>
+
+          {unreadCount > 0 && (
+            <div className="rounded-full bg-blue-100 px-3 py-1 text-sm font-medium text-blue-700">
+              {unreadCount} unread
+            </div>
+          )}
+        </div>
 
         {isLoading && (
           <div className="mt-6 rounded-lg bg-white p-6 shadow">
@@ -119,9 +133,13 @@ function Notifications() {
         {!isLoading &&
           !error &&
           notifications.length === 0 && (
-            <div className="mt-6 rounded-lg bg-white p-6 shadow">
-              <p className="text-gray-500">
+            <div className="mt-6 rounded-lg bg-white p-6 text-center shadow">
+              <p className="font-medium text-gray-700">
                 No notifications yet.
+              </p>
+
+              <p className="mt-2 text-sm text-gray-500">
+                New connection requests and activity will appear here.
               </p>
             </div>
           )}
@@ -131,34 +149,48 @@ function Notifications() {
           notifications.length > 0 && (
             <div className="mt-6 space-y-3">
               {notifications.map((notification) => (
-                <button
+                <div
                   key={notification.id}
-                  type="button"
-                  onClick={() => {
-                    if (!notification.read) {
-                      markAsRead(notification.id)
-                    }
-                  }}
-                  className={`w-full rounded-lg bg-white p-4 text-left shadow ${
+                  className={`rounded-lg bg-white p-4 shadow ${
                     notification.read
-                      ? ""
-                      : "cursor-pointer border-l-4 border-blue-500 hover:bg-gray-50"
+                      ? "border border-gray-100"
+                      : "border-l-4 border-blue-500"
                   }`}
                 >
-                  <p className="text-gray-900">
-                    {notification.message}
-                  </p>
+                  <div className="flex items-start justify-between gap-4">
+                    <div>
+                      <p
+                        className={
+                          notification.read
+                            ? "text-gray-700"
+                            : "font-medium text-gray-900"
+                        }
+                      >
+                        {notification.message}
+                      </p>
 
-                  <p className="mt-2 text-sm text-gray-500">
-                    {notification.createdAt}
-                  </p>
+                      <p className="mt-2 text-sm text-gray-500">
+                        {notification.createdAt}
+                      </p>
+                    </div>
+
+                    {!notification.read && (
+                      <span className="shrink-0 rounded-full bg-blue-100 px-2.5 py-1 text-xs font-medium text-blue-700">
+                        Unread
+                      </span>
+                    )}
+                  </div>
 
                   {!notification.read && (
-                    <p className="mt-2 text-sm font-medium text-blue-600">
-                      Unread
-                    </p>
+                    <button
+                      type="button"
+                      onClick={() => markAsRead(notification.id)}
+                      className="mt-4 rounded-md border px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50"
+                    >
+                      Mark as read
+                    </button>
                   )}
-                </button>
+                </div>
               ))}
             </div>
           )}

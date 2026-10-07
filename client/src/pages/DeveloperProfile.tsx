@@ -4,6 +4,7 @@ import { useAuth } from "../context/AuthContext"
 
 type Developer = {
   id: string
+  userId: string
   name: string
   role: string
   location: string
@@ -13,6 +14,7 @@ type Developer = {
 const developers: Developer[] = [
   {
     id: "alex-johnson",
+    userId: "0e466e9d-168f-4e47-b935-faa26a2cbd40",
     name: "Alex Johnson",
     role: "Python Full Stack Developer",
     location: "Hyderabad, India",
@@ -20,6 +22,7 @@ const developers: Developer[] = [
   },
   {
     id: "sarah-williams",
+    userId: "daa900c2-74d3-4de6-be6f-20dca0714f80",
     name: "Sarah Williams",
     role: "Django Backend Developer",
     location: "Bengaluru, India",
@@ -60,7 +63,7 @@ function DeveloperProfile() {
         }
 
         const response = await fetch(
-            "http://localhost:5000/auth/connections/9f8c92ff-73e5-4884-9296-e184361bb800",
+            `http://localhost:5000/auth/connections/${developer.userId}`,
             {
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -90,7 +93,7 @@ function DeveloperProfile() {
             Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-            receiverId: "9f8c92ff-73e5-4884-9296-e184361bb800",
+          receiverId: developer.userId,
         }),
     })
 
@@ -117,57 +120,75 @@ function DeveloperProfile() {
             ← Back to Developers
         </Link>
 
-        <div className="mt-8 rounded-lg border p-6 shadow-sm">
-          <h2 className="text-2xl font-semibold">
-            {developer?.name}
-          </h2>
+                <div className="mt-8 overflow-hidden rounded-lg border bg-white shadow-sm">
+          <div className="border-b bg-gray-50 px-6 py-8">
+            <div className="flex flex-col gap-5 sm:flex-row sm:items-center">
+              <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-full bg-gray-900 text-3xl font-bold text-white">
+                {developer.name.charAt(0)}
+              </div>
 
-          <p className="mt-2 text-gray-600">
-            {developer?.role}
-          </p>
+              <div>
+                <h2 className="text-3xl font-bold">
+                  {developer.name}
+                </h2>
 
-          <p className="mt-1 text-sm text-gray-500">
-            📍 {developer?.location}
-          </p>
+                <p className="mt-2 text-lg text-gray-600">
+                  {developer.role}
+                </p>
 
-          <p className="mt-6">
-            {developer?.bio}
-          </p>
-
-        <div className="mt-8">
-            <h3 className="text-lg font-semibold">
-                Skills
-            </h3>
-
-            <div className="mt-3 flex flex-wrap gap-2">
-                <span className="rounded-full border px-3 py-1 text-sm">
-                    Python
-                </span>
-
-                <span className="rounded-full border px-3 py-1 text-sm">
-                    Django
-                </span>
-
-                <span className="rounded-full border px-3 py-1 text-sm">
-                    React
-                </span>
-
-                <span className="rounded-full border px-3 py-1 text-sm">
-                    REST APIs
-                </span>
+                <p className="mt-1 text-sm text-gray-500">
+                  📍 {developer.location}
+                </p>
+              </div>
             </div>
-        </div>
+          </div>
 
-        <div className="mt-8">
-            <button
+          <div className="px-6 py-8">
+            <section>
+              <h3 className="text-xl font-semibold">
+                About
+              </h3>
+
+              <p className="mt-3 leading-7 text-gray-600">
+                {developer.bio}
+              </p>
+            </section>
+
+            <section className="mt-8">
+              <h3 className="text-xl font-semibold">
+                Skills
+              </h3>
+
+              <div className="mt-4 flex flex-wrap gap-2">
+                <span className="rounded-full border bg-gray-50 px-4 py-2 text-sm">
+                  Python
+                </span>
+
+                <span className="rounded-full border bg-gray-50 px-4 py-2 text-sm">
+                  Django
+                </span>
+
+                <span className="rounded-full border bg-gray-50 px-4 py-2 text-sm">
+                  React
+                </span>
+
+                <span className="rounded-full border bg-gray-50 px-4 py-2 text-sm">
+                  REST APIs
+                </span>
+              </div>
+            </section>
+
+            <section className="mt-8 border-t pt-6">
+              <button
                 type="button"
                 onClick={sendConnectionRequest}
                 disabled={connected}
-                className="rounded-md bg-black px-5 py-2 text-white disabled:cursor-not-allowed disabled:opacity-50"
-            >
+                className="rounded-md bg-black px-5 py-2.5 font-medium text-white hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-50"
+              >
                 {connected ? "Request Sent" : "Connect"}
-            </button>
-        </div>
+              </button>
+            </section>
+          </div>
         </div>
       </div>
     </div>
