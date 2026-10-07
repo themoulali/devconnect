@@ -16,7 +16,7 @@ import Notifications from "./pages/Notifications.tsx"
 import { useAuth } from "./context/AuthContext.tsx"
 
 function Navigation() {
-  const { user } = useAuth()
+  const { user, logout } = useAuth()
   const [unreadCount, setUnreadCount] = useState(0)
 
   useEffect(() => {
@@ -80,32 +80,59 @@ function Navigation() {
             Home
           </Link>
 
-          <Link
-            to="/profile"
-            className="text-sm font-medium text-gray-700 hover:text-black"
-          >
-            Profile
-          </Link>
+          {!user ? (
+            <>
+              <Link
+                to="/login"
+                className="text-sm font-medium text-gray-700 hover:text-black"
+              >
+                Login
+              </Link>
 
-          <Link
-            to="/developers"
-            className="text-sm font-medium text-gray-700 hover:text-black"
-          >
-            Developers
-          </Link>
+              <Link
+                to="/register"
+                className="rounded-md bg-black px-4 py-2 text-sm font-medium text-white hover:bg-gray-800"
+              >
+                Register
+              </Link>
+            </>
+          ) : (
+            <>
+              <Link
+                to="/profile"
+                className="text-sm font-medium text-gray-700 hover:text-black"
+              >
+                Profile
+              </Link>
 
-          <Link
-            to="/notifications"
-            className="text-sm font-medium text-gray-700 hover:text-black"
-          >
-            🔔 Notifications
+              <Link
+                to="/developers"
+                className="text-sm font-medium text-gray-700 hover:text-black"
+              >
+                Developers
+              </Link>
 
-            {unreadCount > 0 && (
-              <span className="ml-2 rounded-full bg-red-500 px-2 py-1 text-xs text-white">
-                {unreadCount}
-              </span>
-            )}
-          </Link>
+              <Link
+                to="/notifications"
+                className="text-sm font-medium text-gray-700 hover:text-black"
+              >
+                🔔 Notifications
+
+                {unreadCount > 0 && (
+                  <span className="ml-2 rounded-full bg-red-500 px-2 py-1 text-xs text-white">
+                    {unreadCount}
+                  </span>
+                )}
+              </Link>
+
+              <button
+                onClick={logout}
+                className="text-sm font-medium text-gray-700 hover:text-black"
+              >
+                Logout
+              </button>
+            </>
+          )}
         </div>
       </div>
     </nav>
@@ -142,17 +169,17 @@ function App() {
           element={<Register />}
         />
 
-        <Route element={<ProtectedRoute />}>
-          <Route
-            path="/"
-            element={
-              <>
-                <Navigation />
-                <Home />
-              </>
-            }
-          />
+        <Route
+          path="/"
+          element={
+            <>
+              <Navigation />
+              <Home />
+            </>
+          }
+        />
 
+        <Route element={<ProtectedRoute />}>
           <Route
             path="/profile"
             element={
