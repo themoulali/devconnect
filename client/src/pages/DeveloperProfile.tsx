@@ -31,81 +31,85 @@ const developers: Developer[] = [
 ]
 
 function DeveloperProfile() {
-    const { id } = useParams()
+  const { id } = useParams()
+  const { token } = useAuth()
 
-    const developer = developers.find((item) => item.id === id)
-    if (!developer) {
-  return (
-    <div className="min-h-screen p-8">
-      <div className="mx-auto max-w-4xl">
-        <h1 className="text-3xl font-bold">
-          Developer Not Found
-        </h1>
+  const [connectionStatus, setConnectionStatus] = useState<
+    "NONE" | "PENDING" | "ACCEPTED"
+  >("NONE")
 
-        <Link
-          to="/developers"
-          className="mt-4 inline-block text-sm underline"
-        >
-          ← Back to Developers
-        </Link>
-      </div>
-    </div>
-  )
-}
+  const developer = developers.find((item) => item.id === id)
 
-    const [connected, setConnected] = useState(false)
-    const { token } = useAuth()
-
-    useEffect(() => {
+  useEffect(() => {
     const checkConnection = async () => {
-        if (!token) {
-            return
+      if (!token || !developer) {
+        return
+      }
+
+      const response = await fetch(
+        `http://localhost:5000/auth/connections/${developer.userId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
+      )
 
-        const response = await fetch(
-            `http://localhost:5000/auth/connections/${developer.userId}`,
-            {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            }
-        )
+      const data = await response.json()
 
-        const data = await response.json()
-
-        if (data.data) {
-            setConnected(true)
-        }
+      if (data.data) {
+        setConnectionStatus(data.data.status)
+      }
     }
 
     checkConnection()
-}, [token])
+  }, [token, developer])
 
-    const sendConnectionRequest = async () => {
+  if (!developer) {
+    return (
+      <div className="min-h-screen p-8">
+        <div className="mx-auto max-w-4xl">
+          <h1 className="text-3xl font-bold">
+            Developer Not Found
+          </h1>
+
+          <Link
+            to="/developers"
+            className="mt-4 inline-block text-sm underline"
+          >
+            ← Back to Developers
+          </Link>
+        </div>
+      </div>
+    )
+  }
+  const sendConnectionRequest = async () => {
     if (!token) {
-        return
+      return
     }
 
-    const response = await fetch("http://localhost:5000/auth/connections", {
+    const response = await fetch(
+      "http://localhost:5000/auth/connections",
+      {
         method: "POST",
         headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           receiverId: developer.userId,
         }),
-    })
+      }
+    )
 
     const data = await response.json()
 
     if (response.ok) {
-        setConnected(true)
-        console.log(data)
+      setConnectionStatus("PENDING")
     } else {
-        console.error(data)
+      console.error(data)
     }
-}
+  }
   return (
     <div className="min-h-screen p-8">
       <div className="mx-auto max-w-4xl">
@@ -182,10 +186,14 @@ function DeveloperProfile() {
               <button
                 type="button"
                 onClick={sendConnectionRequest}
-                disabled={connected}
+                disabled={connectionStatus !== "NONE"}
                 className="rounded-md bg-black px-5 py-2.5 font-medium text-white hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-50"
               >
-                {connected ? "Request Sent" : "Connect"}
+                {connectionStatus === "PENDING"
+                  ? "Request Sent"
+                  : connectionStatus === "ACCEPTED"
+                  ? "Connected"
+                  : "Connect"}
               </button>
             </section>
           </div>

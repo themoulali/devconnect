@@ -93,6 +93,18 @@ function Notifications() {
     (notification) => !notification.read
   ).length
 
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 p-6">
+        <div className="mx-auto max-w-3xl rounded-lg bg-white p-6 shadow">
+          <p className="text-gray-500">
+            Loading notifications...
+          </p>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="mx-auto max-w-3xl">
@@ -114,15 +126,7 @@ function Notifications() {
           )}
         </div>
 
-        {isLoading && (
-          <div className="mt-6 rounded-lg bg-white p-6 shadow">
-            <p className="text-gray-500">
-              Loading notifications...
-            </p>
-          </div>
-        )}
-
-        {!isLoading && error && (
+        {error && (
           <div className="mt-6 rounded-lg bg-white p-6 shadow">
             <p className="text-red-600">
               {error}
@@ -130,70 +134,66 @@ function Notifications() {
           </div>
         )}
 
-        {!isLoading &&
-          !error &&
-          notifications.length === 0 && (
-            <div className="mt-6 rounded-lg bg-white p-6 text-center shadow">
-              <p className="font-medium text-gray-700">
-                No notifications yet.
-              </p>
+        {!error && notifications.length === 0 && (
+          <div className="mt-6 rounded-lg bg-white p-6 text-center shadow">
+            <p className="font-medium text-gray-700">
+              No notifications yet.
+            </p>
 
-              <p className="mt-2 text-sm text-gray-500">
-                New connection requests and activity will appear here.
-              </p>
-            </div>
-          )}
+            <p className="mt-2 text-gray-500">
+              New connection requests and activity will appear here.
+            </p>
+          </div>
+        )}
 
-        {!isLoading &&
-          !error &&
-          notifications.length > 0 && (
-            <div className="mt-6 space-y-3">
-              {notifications.map((notification) => (
-                <div
-                  key={notification.id}
-                  className={`rounded-lg bg-white p-4 shadow ${
-                    notification.read
-                      ? "border border-gray-100"
-                      : "border-l-4 border-blue-500"
-                  }`}
-                >
-                  <div className="flex items-start justify-between gap-4">
-                    <div>
-                      <p
-                        className={
-                          notification.read
-                            ? "text-gray-700"
-                            : "font-medium text-gray-900"
-                        }
-                      >
-                        {notification.message}
-                      </p>
+        {!error && notifications.length > 0 && (
+          <div className="mt-6 space-y-3">
+            {notifications.map((notification) => (
+              <div
+                key={notification.id}
+                className={`rounded-lg bg-white p-4 shadow ${
+                  notification.read
+                    ? "border border-gray-100"
+                    : "border-l-4 border-blue-500"
+                }`}
+              >
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <p
+                      className={
+                        notification.read
+                          ? "text-gray-700"
+                          : "font-medium text-gray-900"
+                      }
+                    >
+                      {notification.message}
+                    </p>
 
-                      <p className="mt-2 text-sm text-gray-500">
-                        {notification.createdAt}
-                      </p>
-                    </div>
-
-                    {!notification.read && (
-                      <span className="shrink-0 rounded-full bg-blue-100 px-2.5 py-1 text-xs font-medium text-blue-700">
-                        Unread
-                      </span>
-                    )}
+                    <p className="mt-2 text-sm text-gray-500">
+                      {notification.createdAt}
+                    </p>
                   </div>
 
                   {!notification.read && (
-                    <button
-                      type="button"
-                      onClick={() => markAsRead(notification.id)}
-                      className="mt-4 rounded-md border px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50"
-                    >
-                      Mark as read
-                    </button>
+                    <span className="shrink-0 rounded-full bg-blue-100 px-2.5 py-1 text-xs font-medium text-blue-700">
+                      Unread
+                    </span>
                   )}
                 </div>
-              ))}
-            </div>
-          )}
+
+                {!notification.read && (
+                  <button
+                    type="button"
+                    onClick={() => markAsRead(notification.id)}
+                    className="mt-4 rounded-md border px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50"
+                  >
+                    Mark as read
+                  </button>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   )

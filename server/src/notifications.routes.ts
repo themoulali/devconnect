@@ -5,6 +5,11 @@ import {
   markNotificationAsRead,
 } from "./services/notification.service.js"
 
+import {
+  acceptConnectionRequest,
+  getPendingConnectionRequests,
+} from "./services/connection.service.js"
+
 const router = Router()
 
 router.get("/:userId", async (req, res) => {
@@ -29,6 +34,20 @@ router.get("/:userId/unread", async (req, res) => {
   }
 })
 
+router.get("/:userId/requests", async (req, res) => {
+  try {
+    const connections = await getPendingConnectionRequests(
+      req.params.userId
+    )
+
+    res.json(connections)
+  } catch (error) {
+    res.status(500).json({
+      message: "Failed to get pending connection requests",
+    })
+  }
+})
+
 router.patch("/:notificationId/read", async (req, res) => {
   try {
     const notification = await markNotificationAsRead(
@@ -40,6 +59,21 @@ router.patch("/:notificationId/read", async (req, res) => {
   } catch (error) {
     res.status(404).json({
       message: "Notification not found",
+    })
+  }
+})
+
+router.patch("/:connectionId/accept", async (req, res) => {
+  try {
+    const connection = await acceptConnectionRequest(
+      req.params.connectionId,
+      req.body.receiverId
+    )
+
+    res.json(connection)
+  } catch (error) {
+    res.status(404).json({
+      message: "Pending connection request not found",
     })
   }
 })
