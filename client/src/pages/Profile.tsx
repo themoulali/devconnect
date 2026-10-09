@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { useAuth } from "../context/AuthContext"
+import API_URL from "../api"
 
 function Profile() {
   const { user, updateUser } = useAuth()
@@ -14,7 +15,7 @@ const saveProfile = async () => {
   try {
     const token = localStorage.getItem("devconnect_token")
 
-    const response = await fetch("http://localhost:5000/auth/me", {
+    const response = await fetch(`${API_URL}/auth/me`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

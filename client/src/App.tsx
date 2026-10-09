@@ -14,6 +14,7 @@ import DeveloperProfile from "./pages/DeveloperProfile.tsx"
 import ProtectedRoute from "./routes/ProtectedRoute.tsx"
 import Notifications from "./pages/Notifications.tsx"
 import { useAuth } from "./context/AuthContext.tsx"
+import API_URL from "./api"
 
 function Navigation() {
   const { user, logout } = useAuth()
@@ -28,7 +29,7 @@ function Navigation() {
     const fetchUnreadNotifications = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5000/notifications/${user.id}/unread`
+          `${API_URL}/notifications/${user.id}/unread`
         )
 
         if (!response.ok) {

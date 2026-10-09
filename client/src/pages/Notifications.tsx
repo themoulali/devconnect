@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { useAuth } from "../context/AuthContext.tsx"
+import API_URL from "../api"
 
 interface Notification {
   id: string
@@ -28,7 +29,7 @@ function Notifications() {
         setError("")
 
         const response = await fetch(
-          `http://localhost:5000/notifications/${user.id}`
+          `${API_URL}/notifications/${user.id}`
         )
 
         if (!response.ok) {
@@ -58,7 +59,7 @@ function Notifications() {
 
     try {
       const response = await fetch(
-        `http://localhost:5000/notifications/${notificationId}/read`,
+        `${API_URL}/notifications/${notificationId}/read`,
         {
           method: "PATCH",
           headers: {

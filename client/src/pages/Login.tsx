@@ -2,7 +2,7 @@ import { useState, type FormEvent } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { useAuth } from "../context/AuthContext.tsx"
 
-const API_URL = "http://localhost:5000"
+import API_URL from "../api"
 
 export default function Login() {
   const navigate = useNavigate()

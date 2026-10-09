@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { Link, useParams } from "react-router-dom"
 import { useAuth } from "../context/AuthContext"
+import API_URL from "../api"
 
 type Developer = {
   id: string
@@ -47,7 +48,7 @@ function DeveloperProfile() {
       }
 
       const response = await fetch(
-        `http://localhost:5000/auth/connections/${developer.userId}`,
+        `${API_URL}/auth/connections/${developer.userId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -89,7 +90,7 @@ function DeveloperProfile() {
     }
 
     const response = await fetch(
-      "http://localhost:5000/auth/connections",
+      `${API_URL}/auth/connections`,
       {
         method: "POST",
         headers: {
