@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "tsx watch src/server.ts",
-    "build": "tsc",
+    "build": "tsc && node -e \"const fs=require('fs'); fs.mkdirSync('dist/prisma',{recursive:true}); fs.copyFileSync('src/prisma/contract.json','dist/prisma/contract.json')\"",
     "start": "node dist/server.js",
     "postinstall": "prisma skills sync || exit 0"
   },
